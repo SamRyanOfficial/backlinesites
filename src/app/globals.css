@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* ─── Red Room v3 — Righteous theme ─── */
+:root {
+  --nav-h: 72px;
+  --bg: #0C0605;
+  --bg-alt: #14090A;
+  --bg-card: #180C0D;
+  --ink: #F4EADC;
+  --ink-soft: #A99486;
+  --ink-faint: #66534B;
+  --rule: #2A1512;
+  --accent: #E54B2B;
+  --accent-soft: #3E140D;
+  --heading: 'Righteous', system-ui, sans-serif;
+  --body: 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --display-weight: 400;
+  --display-spacing: -0.035em;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* Hero background gradient — red-orange stage light wash */
+.hero-bg {
+  background:
+    radial-gradient(ellipse 1200px 600px at 20% 0%, rgba(229,75,43,0.22), transparent 55%),
+    radial-gradient(ellipse 900px 500px at 85% 20%, rgba(240,137,43,0.14), transparent 55%),
+    radial-gradient(ellipse 800px 400px at 50% 110%, rgba(216,74,30,0.08), transparent 60%);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
