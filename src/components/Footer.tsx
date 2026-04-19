@@ -11,6 +11,7 @@ export default function Footer() {
       }}
     >
       <Container
+        className="footer-stack"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -22,9 +23,9 @@ export default function Footer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <BacklineMark size={20} />
           <span
+            className="type-heading"
             style={{
-              fontFamily: 'var(--heading)',
-              fontWeight: 600,
+              fontWeight: 'var(--display-weight)' as unknown as number,
               fontSize: 16,
             }}
           >
@@ -43,6 +44,7 @@ export default function Footer() {
         </div>
 
         <div
+          className="footer-links"
           style={{
             display: 'flex',
             gap: 24,

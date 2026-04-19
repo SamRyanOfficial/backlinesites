@@ -12,7 +12,7 @@ function ItalicHeadline({ headline, italicWord }: { headline: string; italicWord
     <>
       {parts.map((part, i) =>
         i % 2 === 1 ? (
-          <span key={i} style={{ fontStyle: 'italic', color: 'var(--accent)' }}>
+          <span key={i} className="display-emphasis display-emphasis--accent">
             {part}
           </span>
         ) : (
@@ -33,6 +33,7 @@ export default function Hero() {
   return (
     <section
       id="top"
+      className="hero-section"
       style={{
         position: 'relative',
         paddingTop: 'calc(var(--nav-h) + 64px)',
@@ -47,6 +48,7 @@ export default function Hero() {
       <Container>
         {/* Eyebrow */}
         <div
+          className="hero-eyebrow"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -70,14 +72,16 @@ export default function Hero() {
             }}
           />
           <span>NOW BOOKING SUMMER &apos;26 — LIMITED SPOTS</span>
-          <span style={{ color: 'var(--rule)' }}>·</span>
+          <span className="hero-eyebrow-muted" style={{ color: 'var(--rule)' }}>
+            ·
+          </span>
           <span>Based in Aotearoa, NZ</span>
         </div>
 
         {/* Headline */}
         <h1
+          className="type-heading"
           style={{
-            fontFamily: 'var(--heading)',
             fontWeight: 'var(--display-weight)' as unknown as number,
             fontSize: 'clamp(56px, 9vw, 132px)',
             lineHeight: 0.96,
@@ -92,6 +96,7 @@ export default function Hero() {
 
         {/* Sub copy + CTAs */}
         <div
+          className="hero-subgrid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr auto',
@@ -103,7 +108,7 @@ export default function Hero() {
         >
           <p
             style={{
-              fontSize: 20,
+              fontSize: 'clamp(17px, 4vw, 20px)',
               lineHeight: 1.5,
               color: 'var(--ink-soft)',
               maxWidth: '48ch',
@@ -113,7 +118,7 @@ export default function Hero() {
           >
             Built by a musician who knows what actually gets you booked
           </p>
-          <div style={{ display: 'flex', gap: 12 }}>
+          <div className="hero-cta-row" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <Button primary href="#contact">
               Book More Gigs
             </Button>
@@ -123,6 +128,7 @@ export default function Hero() {
 
         {/* Stats strip */}
         <div
+          className="hero-stats"
           style={{
             marginTop: 96,
             paddingTop: 32,
@@ -135,6 +141,7 @@ export default function Hero() {
           {stats.map(([k, v]) => (
             <div key={v}>
               <div
+                className="hero-stat-num"
                 style={{
                   fontFamily: 'var(--heading)',
                   fontSize: 42,

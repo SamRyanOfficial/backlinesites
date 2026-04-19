@@ -75,7 +75,7 @@ export default function Button({
 
   if (href) {
     return (
-      <a href={href} style={merged}>
+      <a href={href} style={merged} onClick={onClick}>
         {children}
         <Arrow />
       </a>

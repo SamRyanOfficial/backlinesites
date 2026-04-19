@@ -3,11 +3,15 @@ import { ReactNode } from 'react';
 interface EditorialHeaderProps {
   eyebrow?: string;
   children: ReactNode;
+  className?: string;
 }
 
-export default function EditorialHeader({ eyebrow, children }: EditorialHeaderProps) {
+export default function EditorialHeader({ eyebrow, children, className }: EditorialHeaderProps) {
   return (
-    <div style={{ marginBottom: 48 }}>
+    <div
+      className={['editorial-header', className].filter(Boolean).join(' ')}
+      style={{ marginBottom: 48 }}
+    >
       {eyebrow && (
         <div
           style={{
@@ -40,5 +44,9 @@ export default function EditorialHeader({ eyebrow, children }: EditorialHeaderPr
 }
 
 export function Italic({ children }: { children: ReactNode }) {
-  return <span style={{ fontStyle: 'italic', fontWeight: 'inherit' }}>{children}</span>;
+  return (
+    <span className="display-emphasis" style={{ fontWeight: 'inherit' }}>
+      {children}
+    </span>
+  );
 }

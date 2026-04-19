@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
-/* ─── Red Room v3 — Righteous theme ─── */
+/* ─── Red Room v3 — Inter headlines + body ─── */
 :root {
+  --container-pad: clamp(16px, 5vw, 32px);
+  --section-pad-y: clamp(56px, 11vw, 120px);
   --nav-h: 72px;
   --bg: #0C0605;
   --bg-alt: #14090A;
@@ -12,15 +14,22 @@
   --rule: #2A1512;
   --accent: #E54B2B;
   --accent-soft: #3E140D;
-  --heading: 'Righteous', system-ui, sans-serif;
-  --body: 'Inter', system-ui, sans-serif;
-  --mono: 'JetBrains Mono', monospace;
+  /* Headlines use the same stack as body (next/font Inter on <body>) */
+  --heading: var(--font-inter), system-ui, sans-serif;
+  --body: var(--font-inter), system-ui, sans-serif;
+  --mono: var(--font-mono), ui-monospace, monospace;
   --display-weight: 400;
   --display-spacing: -0.035em;
 }
 
+/*
+  Tailwind preflight sets html { font-family: theme sans }. Headings (h1–h6) only
+  reset size/weight and inherit the document font unless font-family is set.
+  Tie the root to our body stack; display headings use --heading (Inter).
+*/
 html {
   scroll-behavior: smooth;
+  font-family: var(--body);
 }
 
 * {
@@ -33,6 +42,8 @@ body {
   background: var(--bg);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -68,4 +79,342 @@ select {
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: none; }
+}
+
+/* ─── Site container (safe areas + fluid padding) ─── */
+.site-container {
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: max(var(--container-pad), env(safe-area-inset-left));
+  padding-right: max(var(--container-pad), env(safe-area-inset-right));
+}
+
+/* ─── Navigation ─── */
+.nav-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: max(var(--container-pad), env(safe-area-inset-left));
+  padding-right: max(var(--container-pad), env(safe-area-inset-right));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.nav-desktop-only {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 3vw, 32px);
+}
+
+.nav-burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--bg-card) 80%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+}
+
+.nav-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.2s ease;
+}
+
+.nav-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(320px, 92vw);
+  height: 100%;
+  background: var(--bg);
+  border-left: 1px solid var(--rule);
+  padding: calc(var(--nav-h) + 16px) max(var(--container-pad), env(safe-area-inset-right)) 24px
+    max(var(--container-pad), env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: slideUp 0.25s ease;
+  box-shadow: -12px 0 40px color-mix(in srgb, #000 35%, transparent);
+}
+
+.nav-drawer a {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.nav-drawer a:active {
+  color: var(--ink);
+}
+
+/* About — single portrait */
+.about-portrait {
+  position: relative;
+  width: 100%;
+  max-width: min(100%, 440px);
+  margin-left: auto;
+  aspect-ratio: 3 / 4;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  align-self: center;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --nav-h: 64px;
+  }
+
+  .nav-desktop-only {
+    display: none !important;
+  }
+
+  .nav-burger {
+    display: flex !important;
+  }
+}
+
+/* ─── Responsive layouts (≤768px) ─── */
+@media (max-width: 768px) {
+  .split-intro {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    margin-bottom: 40px !important;
+    align-items: start !important;
+  }
+
+  .portfolio-cards {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .portfolio-cards > * {
+    grid-column: 1 / -1 !important;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr !important;
+    max-width: none !important;
+  }
+
+  .service-card {
+    min-height: auto !important;
+  }
+
+  .process-steps {
+    grid-template-columns: 1fr !important;
+  }
+
+  .process-step {
+    border-right: none !important;
+    border-bottom: 1px solid var(--rule) !important;
+    padding: 24px 0 !important;
+  }
+
+  .process-step:last-child {
+    border-bottom: none !important;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .about-portrait {
+    max-width: none !important;
+    margin-left: 0 !important;
+    align-self: stretch !important;
+  }
+
+  .faq-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .faq-question {
+    font-size: clamp(17px, 4.5vw, 22px) !important;
+    padding-right: 8px !important;
+  }
+
+  .faq-trigger {
+    align-items: flex-start !important;
+    padding: 20px 0 !important;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .contact-sticky {
+    position: static !important;
+    top: auto !important;
+  }
+
+  .contact-form-panel {
+    padding: clamp(20px, 5vw, 40px) !important;
+    min-height: auto !important;
+  }
+
+  .contact-name-email-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .thanks-panel {
+    min-height: auto !important;
+  }
+
+  .contact-form-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .testimonial-quote {
+    font-size: clamp(18px, 4.5vw, 22px) !important;
+  }
+
+  .hero-section {
+    padding-top: calc(var(--nav-h) + 40px) !important;
+    padding-bottom: 56px !important;
+  }
+
+  .hero-eyebrow {
+    flex-wrap: wrap;
+    row-gap: 6px;
+    margin-bottom: 28px !important;
+    font-size: 10px !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  .hero-eyebrow-muted {
+    display: none;
+  }
+
+  .hero-subgrid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    margin-top: 36px !important;
+  }
+
+  .hero-cta-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    margin-top: 56px !important;
+    padding-top: 24px !important;
+  }
+
+  .hero-stat-num {
+    font-size: clamp(30px, 9vw, 42px) !important;
+  }
+
+  .section-pad {
+    padding-top: var(--section-pad-y) !important;
+    padding-bottom: var(--section-pad-y) !important;
+  }
+
+  .section-pad-contact {
+    padding-top: var(--section-pad-y) !important;
+    padding-bottom: calc(var(--section-pad-y) + env(safe-area-inset-bottom)) !important;
+  }
+
+  .portfolio-card-meta {
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+  }
+
+  .case-modal-overlay {
+    padding: 0 !important;
+    align-items: stretch !important;
+  }
+
+  .case-modal-panel {
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  .case-modal-pad {
+    padding-left: max(var(--container-pad), env(safe-area-inset-left)) !important;
+    padding-right: max(var(--container-pad), env(safe-area-inset-right)) !important;
+  }
+
+  .case-modal-header {
+    padding-top: 40px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .case-modal-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    padding-top: 24px !important;
+    padding-bottom: 32px !important;
+  }
+
+  .case-modal-cta {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .case-modal-cta-btns {
+    width: 100% !important;
+    flex-direction: column !important;
+  }
+
+  .editorial-header {
+    margin-bottom: 32px !important;
+  }
+
+  .footer-stack {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+  }
+
+  .footer-links {
+    flex-wrap: wrap !important;
+    gap: 12px 20px !important;
+  }
+}
+
+/*
+  Display type — must stay at end of this file so it wins over Tailwind’s bundle order.
+  Covers semantic headings plus blockquotes and utility classes (not h1–h6).
+*/
+:is(h1, h2, h3, h4, h5, h6, blockquote, .type-heading, .hero-stat-num) {
+  font-family: var(--heading) !important;
+}
+
+/* Inline emphasis inside headings (Inter has a real italic face). */
+.display-emphasis {
+  font-style: italic;
+  font-family: inherit;
+}
+
+.display-emphasis--accent {
+  color: var(--accent);
 }

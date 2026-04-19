@@ -8,15 +8,7 @@ interface ContainerProps {
 
 export default function Container({ children, style, className }: ContainerProps) {
   return (
-    <div
-      className={className}
-      style={{
-        maxWidth: 1240,
-        margin: '0 auto',
-        padding: '0 32px',
-        ...style,
-      }}
-    >
+    <div className={['site-container', className].filter(Boolean).join(' ')} style={style}>
       {children}
     </div>
   );

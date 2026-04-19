@@ -5,11 +5,12 @@ import EditorialHeader, { Italic } from './ui/EditorialHeader';
 function ServiceCard({ s }: { s: ServiceItem }) {
   return (
     <div
+      className="service-card"
       style={{
         background: s.featured ? 'var(--ink)' : 'var(--bg-card)',
         color: s.featured ? 'var(--bg)' : 'var(--ink)',
         border: '1px solid var(--rule)',
-        padding: '28px 32px 32px',
+        padding: 'clamp(20px, 5vw, 28px) clamp(20px, 5vw, 32px) 32px',
         display: 'flex',
         flexDirection: 'column',
         gap: 20,
@@ -85,8 +86,8 @@ function ServiceCard({ s }: { s: ServiceItem }) {
             }}
           >
             <span
+              className="type-heading"
               style={{
-                fontFamily: 'var(--heading)',
                 fontSize: 52,
                 fontWeight: 'var(--display-weight)' as unknown as number,
                 letterSpacing: 'var(--display-spacing)',
@@ -168,6 +169,7 @@ export default function Services() {
   return (
     <section
       id="services"
+      className="section-pad"
       style={{
         padding: '120px 0',
         background: 'var(--bg-alt)',
@@ -177,6 +179,7 @@ export default function Services() {
     >
       <Container>
         <div
+          className="split-intro"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1.5fr',
@@ -203,6 +206,7 @@ export default function Services() {
         </div>
 
         <div
+          className="services-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',

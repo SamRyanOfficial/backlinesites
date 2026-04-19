@@ -11,6 +11,7 @@ export default function FAQ() {
   return (
     <section
       id="faq"
+      className="section-pad"
       style={{
         padding: '120px 0',
         background: 'var(--bg-alt)',
@@ -19,6 +20,7 @@ export default function FAQ() {
     >
       <Container>
         <div
+          className="faq-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1.5fr',
@@ -59,6 +61,8 @@ export default function FAQ() {
                 }}
               >
                 <button
+                  type="button"
+                  className="faq-trigger"
                   onClick={() => setOpen(open === i ? -1 : i)}
                   style={{
                     width: '100%',
@@ -74,8 +78,8 @@ export default function FAQ() {
                   }}
                 >
                   <span
+                    className="faq-question type-heading"
                     style={{
-                      fontFamily: 'var(--heading)',
                       fontSize: 22,
                       fontWeight: 'var(--display-weight)' as unknown as number,
                       letterSpacing: 'var(--display-spacing)',
@@ -99,23 +103,33 @@ export default function FAQ() {
                 </button>
                 <div
                   style={{
-                    maxHeight: open === i ? 300 : 0,
+                    maxHeight: open === i ? 2000 : 0,
                     overflow: 'hidden',
-                    transition: 'max-height 0.3s ease',
+                    transition: 'max-height 0.35s ease',
                   }}
                 >
-                  <p
+                  <div
                     style={{
-                      margin: 0,
                       padding: '0 0 24px',
                       fontSize: 16,
                       lineHeight: 1.6,
                       color: 'var(--ink-soft)',
                       maxWidth: '60ch',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 14,
                     }}
                   >
-                    {item.a}
-                  </p>
+                    {item.a
+                      .split(/\n\n+/)
+                      .map((para) => para.trim())
+                      .filter(Boolean)
+                      .map((para, j) => (
+                        <p key={j} style={{ margin: 0 }}>
+                          {para}
+                        </p>
+                      ))}
+                  </div>
                 </div>
               </div>
             ))}

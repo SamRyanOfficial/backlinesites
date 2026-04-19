@@ -4,9 +4,10 @@ import EditorialHeader, { Italic } from './ui/EditorialHeader';
 
 export default function About() {
   return (
-    <section id="about" style={{ padding: '140px 0' }}>
+    <section id="about" className="section-pad" style={{ padding: '140px 0' }}>
       <Container>
         <div
+          className="about-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1.2fr',
@@ -44,13 +45,13 @@ export default function About() {
                 overcomplicated nonsense. Just websites that actually help you get more gigs.
               </p>
               <p
+                className="type-heading"
                 style={{
                   margin: '16px 0 0',
-                  fontFamily: 'var(--heading)',
                   fontSize: 22,
-                  fontStyle: 'italic',
                   color: 'var(--ink)',
                   fontWeight: 400,
+                  fontStyle: 'normal',
                 }}
               >
                 Built for musicians, by someone in the industry.
@@ -58,68 +59,15 @@ export default function About() {
             </div>
           </div>
 
-          {/* Right: photo grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: 16,
-            }}
-          >
-            {/* Profile — spans 2 rows */}
-            <div
-              style={{
-                gridRow: 'span 2',
-                overflow: 'hidden',
-                border: '1px solid var(--rule)',
-                position: 'relative',
-                minHeight: 400,
-              }}
-            >
-              <Image
-                src="/images/profile.jpg"
-                alt="Sam Fisher — Backline Sites"
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="(max-width: 768px) 100vw, 300px"
-              />
-            </div>
-
-            {/* Second photo */}
-            <div
-              style={{
-                overflow: 'hidden',
-                border: '1px solid var(--rule)',
-                position: 'relative',
-                minHeight: 190,
-              }}
-            >
-              <Image
-                src="/images/with-band.jpg"
-                alt="On stage"
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="(max-width: 768px) 100vw, 200px"
-              />
-            </div>
-
-            {/* Third photo */}
-            <div
-              style={{
-                overflow: 'hidden',
-                border: '1px solid var(--rule)',
-                position: 'relative',
-                minHeight: 190,
-              }}
-            >
-              <Image
-                src="/images/live-performance.jpg"
-                alt="Live performance"
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="(max-width: 768px) 100vw, 200px"
-              />
-            </div>
+          {/* Right: portrait */}
+          <div className="about-portrait">
+            <Image
+              src="/images/profile.jpg"
+              alt="Sam Fisher — Backline Sites"
+              fill
+              style={{ objectFit: 'cover', objectPosition: 'center center' }}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 480px"
+            />
           </div>
         </div>
       </Container>

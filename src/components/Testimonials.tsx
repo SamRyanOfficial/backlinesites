@@ -5,6 +5,7 @@ import EditorialHeader, { Italic } from './ui/EditorialHeader';
 export default function Testimonials() {
   return (
     <section
+      className="section-pad"
       style={{
         padding: '120px 0',
         background: 'var(--bg-alt)',
@@ -18,6 +19,7 @@ export default function Testimonials() {
         </EditorialHeader>
 
         <div
+          className="testimonials-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
@@ -30,8 +32,8 @@ export default function Testimonials() {
               style={{ margin: 0, display: 'flex', flexDirection: 'column', gap: 24 }}
             >
               <div
+                className="type-heading"
                 style={{
-                  fontFamily: 'var(--heading)',
                   fontSize: 56,
                   lineHeight: 0.5,
                   color: 'var(--accent)',
@@ -41,15 +43,15 @@ export default function Testimonials() {
                 &ldquo;
               </div>
               <blockquote
+                className="testimonial-quote"
                 style={{
                   margin: 0,
-                  fontFamily: 'var(--heading)',
                   fontSize: 22,
                   lineHeight: 1.3,
                   fontWeight: 400,
                   letterSpacing: '-0.01em',
                   color: 'var(--ink)',
-                  fontStyle: 'italic',
+                  fontStyle: 'normal',
                 }}
               >
                 {t.quote}

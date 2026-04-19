@@ -4,9 +4,10 @@ import EditorialHeader, { Italic } from './ui/EditorialHeader';
 
 export default function Process() {
   return (
-    <section id="process" style={{ padding: '120px 0' }}>
+    <section id="process" className="section-pad" style={{ padding: '120px 0' }}>
       <Container>
         <div
+          className="split-intro"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1.5fr',
@@ -33,6 +34,7 @@ export default function Process() {
         </div>
 
         <div
+          className="process-steps"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
@@ -43,6 +45,7 @@ export default function Process() {
           {PROCESS.map((p, i) => (
             <div
               key={p.n}
+              className="process-step"
               style={{
                 padding: '32px 24px 32px 0',
                 borderRight:

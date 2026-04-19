@@ -1,21 +1,104 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { PORTFOLIO, PortfolioItem } from '@/lib/data';
 import Container from './ui/Container';
 import EditorialHeader, { Italic } from './ui/EditorialHeader';
 import Button from './ui/Button';
 
+/** Black field + diagonal red warning-style sign (no mini-site chrome). */
+function PlaceholderWarningBanner({ label }: { label: string }) {
+  const compact = label.length > 14;
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        background: '#000000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          transform: 'rotate(-45deg)',
+          border: '4px solid #E53935',
+          background: '#070707',
+          padding: 'clamp(12px, 3vw, 20px) clamp(24px, 7vw, 56px)',
+          boxShadow:
+            '0 0 0 1px rgba(229, 57, 53, 0.4), 6px 6px 0 rgba(0, 0, 0, 0.75)',
+        }}
+      >
+        <span
+          style={{
+            fontFamily: 'var(--mono)',
+            fontSize: compact ? 'clamp(9px, 2.6vw, 18px)' : 'clamp(11px, 3.2vw, 22px)',
+            fontWeight: 700,
+            letterSpacing: compact ? '0.14em' : '0.26em',
+            color: '#FF5252',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {label}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** Real screenshot or abstract mini mockup */
+function PortfolioPreview({
+  p,
+  previewContext = 'card',
+}: {
+  p: PortfolioItem;
+  previewContext?: 'card' | 'modal';
+}) {
+  if (p.screenshot) {
+    // Card ≈ half the work grid (~600px); modal can be ~1000px+ wide — size hints avoid loading a
+    // tiny srcset slot then upscaling (blurry). A sharp file still needs ≥~1200px width @2x retina.
+    const sizes =
+      previewContext === 'modal'
+        ? '(max-width: 900px) 95vw, min(1080px, 92vw)'
+        : '(max-width: 900px) 100vw, min(600px, 50vw)';
+
+    return (
+      <Image
+        src={p.screenshot}
+        alt={`${p.band} — website screenshot`}
+        fill
+        sizes={sizes}
+        quality={92}
+        style={{
+          objectFit: 'cover',
+          objectPosition: p.screenshotPosition ?? 'center center',
+        }}
+        priority={
+          p.id === 'copperskies' || p.id === 'midnightfizz' || p.id === 'joemac'
+        }
+      />
+    );
+  }
+  if (p.placeholderPreview === 'warning-banner') {
+    return (
+      <PlaceholderWarningBanner label={p.placeholderBannerText ?? 'Coming soon'} />
+    );
+  }
+  return <MiniSiteMockup p={p} />;
+}
+
 // Mini mockup of each band site using their palette
 function MiniSiteMockup({ p }: { p: PortfolioItem }) {
   const [dark, light, cream] = p.palette;
 
   const headingFont =
-    p.id === 'copperskies'
-      ? "'Fraunces', serif"
-      : p.id === 'midnightfizz'
-        ? "'DM Serif Display', serif"
-        : "'Space Grotesk', sans-serif";
+    p.id === 'midnightfizz'
+      ? "'DM Serif Display', serif"
+      : "'Space Grotesk', sans-serif";
 
   return (
     <div
@@ -141,20 +224,22 @@ function PortfolioCard({
   aspect: string;
 }) {
   const [hover, setHover] = useState(false);
+  const isHashLink = Boolean(p.linkToHash);
+  const hoverHint = isHashLink ? 'Get in touch →' : 'View case →';
+  const chipLabel = p.placeholder ? (p.placeholderChipText ?? 'Coming soon') : null;
 
-  return (
-    <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onClick={() => onOpen(p)}
-      style={{
-        gridColumn: col,
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 16,
-      }}
-    >
+  const shellStyle = {
+    gridColumn: col,
+    cursor: 'pointer' as const,
+    display: 'flex' as const,
+    flexDirection: 'column' as const,
+    gap: 16,
+    textDecoration: 'none' as const,
+    color: 'inherit' as const,
+  };
+
+  const cardBody = (
+    <>
       <div
         style={{
           aspectRatio: aspect,
@@ -167,7 +252,7 @@ function PortfolioCard({
           transform: hover ? 'translateY(-4px)' : 'none',
         }}
       >
-        <MiniSiteMockup p={p} />
+        <PortfolioPreview p={p} />
 
         {/* hover overlay */}
         <div
@@ -193,11 +278,11 @@ function PortfolioCard({
               color: p.palette[2],
             }}
           >
-            <span>View case →</span>
+            <span>{hoverHint}</span>
           </div>
         </div>
 
-        {p.placeholder && (
+        {chipLabel && (
           <div
             style={{
               position: 'absolute',
@@ -212,12 +297,13 @@ function PortfolioCard({
               letterSpacing: '0.15em',
             }}
           >
-            Coming soon
+            {chipLabel}
           </div>
         )}
       </div>
 
       <div
+        className="portfolio-card-meta"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -243,7 +329,7 @@ function PortfolioCard({
           style={{
             fontFamily: 'var(--mono)',
             fontSize: 11,
-            color: 'var(--ink-faint)',
+            color: isHashLink ? 'var(--accent)' : 'var(--ink-faint)',
             textTransform: 'uppercase',
             letterSpacing: '0.15em',
             flexShrink: 0,
@@ -252,6 +338,37 @@ function PortfolioCard({
           {p.url}
         </div>
       </div>
+    </>
+  );
+
+  if (isHashLink && p.linkToHash) {
+    return (
+      <a
+        href={p.linkToHash}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        style={shellStyle}
+        aria-label={`${p.band} — ${p.genre}. Go to contact to enquire.`}
+      >
+        {cardBody}
+      </a>
+    );
+  }
+
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={() => onOpen(p)}
+      style={{
+        gridColumn: col,
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+      }}
+    >
+      {cardBody}
     </div>
   );
 }
@@ -262,6 +379,7 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
 
   return (
     <div
+      className="case-modal-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -277,6 +395,7 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
       onClick={onClose}
     >
       <div
+        className="case-modal-panel"
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'var(--bg)',
@@ -316,7 +435,10 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
         </button>
 
         {/* Hero */}
-        <div style={{ padding: 56, paddingBottom: 32 }}>
+        <div
+          className="case-modal-pad case-modal-header"
+          style={{ padding: 56, paddingBottom: 32 }}
+        >
           <div
             style={{
               fontFamily: 'var(--mono)',
@@ -342,24 +464,36 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
             {p.band}
           </h2>
           <div style={{ marginTop: 16, fontSize: 16, color: 'var(--ink-soft)' }}>
-            {p.genre} ·{' '}
-            <a
-              href={`https://${p.url}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                color: 'var(--accent)',
-                textDecoration: 'underline',
-                textUnderlineOffset: 3,
-              }}
-            >
-              {p.url}
-            </a>
+            {p.genre}
+            {p.placeholder ? (
+              <>
+                {' '}
+                ·{' '}
+                <span style={{ color: 'var(--accent)' }}>{p.url}</span>
+              </>
+            ) : (
+              <>
+                {' '}
+                ·{' '}
+                <a
+                  href={`https://${p.url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: 'var(--accent)',
+                    textDecoration: 'underline',
+                    textUnderlineOffset: 3,
+                  }}
+                >
+                  {p.url}
+                </a>
+              </>
+            )}
           </div>
         </div>
 
         {/* Large preview */}
-        <div style={{ padding: '0 56px' }}>
+        <div className="case-modal-pad" style={{ padding: '0 56px' }}>
           <div
             style={{
               aspectRatio: '16/10',
@@ -369,12 +503,13 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
               border: '1px solid var(--rule)',
             }}
           >
-            <MiniSiteMockup p={p} />
+            <PortfolioPreview p={p} previewContext="modal" />
           </div>
         </div>
 
         {/* Details */}
         <div
+          className="case-modal-pad case-modal-detail-grid"
           style={{
             padding: 56,
             paddingTop: 32,
@@ -433,7 +568,7 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
         </div>
 
         {/* CTA */}
-        <div style={{ padding: '0 56px 56px' }}>
+        <div className="case-modal-pad" style={{ padding: '0 56px 56px' }}>
           <div
             style={{
               height: 1,
@@ -442,6 +577,7 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
             }}
           />
           <div
+            className="case-modal-cta"
             style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -453,7 +589,7 @@ function CaseDetail({ p, onClose }: { p: PortfolioItem | null; onClose: () => vo
             <div style={{ fontSize: 15, color: 'var(--ink-soft)', maxWidth: '40ch' }}>
               Want a site like this for your band? Start with a 20-min call.
             </div>
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div className="case-modal-cta-btns" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               {!p.placeholder && (
                 <Button href={`https://${p.url}`}>Visit live site</Button>
               )}
@@ -509,9 +645,10 @@ export default function Portfolio() {
 
   return (
     <>
-      <section id="work" style={{ padding: '120px 0' }}>
+      <section id="work" className="section-pad" style={{ padding: '120px 0' }}>
         <Container>
           <div
+            className="split-intro"
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1.5fr',
@@ -538,6 +675,7 @@ export default function Portfolio() {
           </div>
 
           <div
+            className="portfolio-cards"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(6, 1fr)',

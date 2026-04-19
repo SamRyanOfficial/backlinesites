@@ -11,6 +11,18 @@ export interface PortfolioItem {
   accent: string;
   stats: [string, string][];
   placeholder?: boolean;
+  /** No screenshot: angled warning-style “coming soon” strip instead of mini mockup */
+  placeholderPreview?: 'mockup' | 'warning-banner';
+  /** Copy on the diagonal warning banner; defaults to “Coming soon” */
+  placeholderBannerText?: string;
+  /** Top-right chip when `placeholder` (e.g. Open slot) */
+  placeholderChipText?: string;
+  /** Whole card links here (e.g. #contact) instead of opening the case modal */
+  linkToHash?: string;
+  /** Path under /public, e.g. /images/work/copperskies.jpg */
+  screenshot?: string;
+  /** CSS object-position for screenshot crop focal point */
+  screenshotPosition?: string;
 }
 
 export const PORTFOLIO: PortfolioItem[] = [
@@ -31,6 +43,8 @@ export const PORTFOLIO: PortfolioItem[] = [
       ['Reviews', '5★'],
       ['Reach', 'NZ-wide'],
     ],
+    screenshot: '/images/work/copperskies.jpg',
+    screenshotPosition: 'center 38%',
   },
   {
     id: 'midnightfizz',
@@ -49,6 +63,8 @@ export const PORTFOLIO: PortfolioItem[] = [
       ['Lineup', '4-5 pc'],
       ['Coverage', 'NZ-Wide'],
     ],
+    screenshot: '/images/work/midnightfizz.jpg',
+    screenshotPosition: 'center 40%',
   },
   {
     id: 'joemac',
@@ -67,44 +83,51 @@ export const PORTFOLIO: PortfolioItem[] = [
       ['Experience', '10+ yrs'],
       ['Roles', 'Solo / Band'],
     ],
+    screenshot: '/images/work/joemac.jpg',
+    screenshotPosition: 'center 42%',
   },
   {
-    id: 'placeholder-1',
-    band: 'The Longshore',
-    genre: 'Indie rock · Wellington',
-    url: 'thelongshore.nz',
-    year: '2025',
-    scope: 'EPK · Tour dates · Merch link',
+    id: 'turtlefunk',
+    band: 'Turtle Funk',
+    genre: 'Funk & soul',
+    url: 'Coming soon',
+    year: '2026',
+    scope: 'Full site · Booking · Show feed',
     blurb:
-      'Coming soon — indie rock four-piece. EPK-style landing page with tour dates, press kit download, and merch.',
-    tagline: 'Saltwater songs for the long drive home',
-    palette: ['#0E1A2B', '#6EA8D6', '#E6EEF5'],
-    accent: '#6EA8D6',
+      'Coming soon — Turtle Funk. A funk-forward band site with gig dates, enquiry flow, and a groove-first first impression.',
+    tagline: 'Slow and steady wins the dance floor',
+    palette: ['#14332A', '#7BC9A8', '#E8F4E8'],
+    accent: '#7BC9A8',
     stats: [
-      ['Shows', '40+'],
-      ['Release', "EP '26"],
-      ['Base', 'Welly'],
+      ['Status', 'In build'],
+      ['Launch', '2026'],
+      ['Vibe', 'Funk / soul'],
     ],
     placeholder: true,
+    placeholderPreview: 'warning-banner',
   },
   {
-    id: 'placeholder-2',
-    band: 'Hana Moon',
-    genre: 'Singer-songwriter · Auckland',
-    url: 'hanamoon.co',
-    year: '2025',
-    scope: 'Artist site · Mailing list · Streaming',
+    id: 'open-slot',
+    band: 'Your band here',
+    genre: 'Next build slot · reserved for you',
+    url: 'Get in touch',
+    year: '—',
+    scope: 'Full site · Your domain · Your story',
     blurb:
-      'Coming soon — singer-songwriter. Soft editorial site focused on listening, with mailing-list signup and a minimal show feed.',
-    tagline: 'Quiet songs for loud weeks',
-    palette: ['#2B1F2B', '#E8A3B6', '#F5EDE8'],
-    accent: '#E8A3B6',
+      'This spot is for the next act who’s ready to level up. Same craft as the builds above — we shape it around your gigs, sound, and how you get booked.',
+    tagline: 'Could be your name on this card',
+    palette: ['#0A0A0A', '#E53935', '#F5F5F5'],
+    accent: '#E53935',
     stats: [
-      ['Single', 'Out now'],
-      ['Shows', 'AKL'],
-      ['Format', 'Solo'],
+      ['Status', 'Available'],
+      ['You', 'Here'],
+      ['Next step', 'Say hi'],
     ],
     placeholder: true,
+    placeholderPreview: 'warning-banner',
+    placeholderBannerText: 'Your site here',
+    placeholderChipText: 'Open slot',
+    linkToHash: '#contact',
   },
 ];
 
@@ -191,7 +214,7 @@ export interface FAQItem {
 export const FAQ: FAQItem[] = [
   {
     q: 'How much does it cost?',
-    a: 'Two options. $600 one-time for a site I build and teach you to manage yourself — no ongoing fees or hosting fees after that. Or $29.99/month for a site I build AND manage for you, including hosting and updates.',
+    a: "There are two ways to work together:\n\n• $600 one-time — I build your site and teach you to manage it yourself. After launch: no ongoing fees.\n\n• $29.99/month — I build your site and keep running it for you: hosting, updates, and edits when you need them.",
   },
   {
     q: 'How long does it take?',

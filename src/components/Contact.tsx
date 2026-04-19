@@ -13,12 +13,6 @@ interface FormData {
   project: string;
 }
 
-const steps = [
-  { key: 'basics', label: 'The basics', n: '01' },
-  { key: 'links', label: 'Your music', n: '02' },
-  { key: 'brief', label: 'The project', n: '03' },
-];
-
 const inputBase: CSSProperties = {
   width: '100%',
   background: 'transparent',
@@ -134,6 +128,7 @@ function ContactLine({
 function Thanks({ onReset }: { onReset: () => void }) {
   return (
     <div
+      className="thanks-panel"
       style={{
         minHeight: 460,
         display: 'flex',
@@ -164,7 +159,7 @@ function Thanks({ onReset }: { onReset: () => void }) {
         }}
       >
         Thanks — I&apos;ll be in{' '}
-        <span style={{ fontStyle: 'italic', color: 'var(--accent)' }}>touch</span>.
+        <span className="display-emphasis display-emphasis--accent">touch</span>.
       </h3>
       <p
         style={{
@@ -188,7 +183,6 @@ function Thanks({ onReset }: { onReset: () => void }) {
 }
 
 export default function Contact() {
-  const [step, setStep] = useState(0);
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<FormData>({
@@ -203,12 +197,11 @@ export default function Contact() {
   const update = (k: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm({ ...form, [k]: e.target.value });
 
-  const canNext = () => {
-    if (step === 0) return form.bandName && form.contactName && form.email.includes('@');
-    if (step === 1) return true;
-    if (step === 2) return form.project.trim().length > 20;
-    return true;
-  };
+  const canSubmit =
+    Boolean(form.bandName.trim()) &&
+    Boolean(form.contactName.trim()) &&
+    form.email.includes('@') &&
+    form.project.trim().length > 20;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -232,13 +225,13 @@ export default function Contact() {
 
   const reset = () => {
     setSent(false);
-    setStep(0);
     setForm({ bandName: '', contactName: '', email: '', musicLink: '', socials: '', project: '' });
   };
 
   return (
     <section
       id="contact"
+      className="section-pad-contact"
       style={{
         padding: '140px 0 120px',
         background: 'var(--ink)',
@@ -247,6 +240,7 @@ export default function Contact() {
     >
       <Container>
         <div
+          className="contact-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1.4fr',
@@ -255,7 +249,7 @@ export default function Contact() {
           }}
         >
           {/* Left: context */}
-          <div style={{ position: 'sticky', top: 'calc(var(--nav-h) + 32px)' }}>
+          <div className="contact-sticky" style={{ position: 'sticky', top: 'calc(var(--nav-h) + 32px)' }}>
             <div
               style={{
                 fontFamily: 'var(--mono)',
@@ -279,7 +273,7 @@ export default function Contact() {
               }}
             >
               Tell me about{' '}
-              <span style={{ fontStyle: 'italic', color: 'var(--accent)' }}>your band.</span>
+              <span className="display-emphasis display-emphasis--accent">your band.</span>
             </h2>
             <p
               style={{
@@ -313,6 +307,7 @@ export default function Contact() {
 
           {/* Right: form */}
           <div
+            className="contact-form-panel"
             style={{
               background: 'color-mix(in srgb, var(--bg) 8%, var(--ink))',
               border: '1px solid color-mix(in srgb, var(--bg) 15%, var(--ink))',
@@ -324,197 +319,104 @@ export default function Contact() {
               <Thanks onReset={reset} />
             ) : (
               <form onSubmit={submit}>
-                {/* Step tabs */}
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: 0,
-                    marginBottom: 40,
-                    borderBottom:
-                      '1px solid color-mix(in srgb, var(--bg) 15%, var(--ink))',
-                  }}
-                >
-                  {steps.map((s, i) => (
-                    <button
-                      key={s.key}
-                      type="button"
-                      onClick={() => (i <= step ? setStep(i) : null)}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        padding: '0 0 16px',
-                        marginRight: 40,
-                        cursor: i <= step ? 'pointer' : 'not-allowed',
-                        color:
-                          i === step
-                            ? 'var(--bg)'
-                            : 'color-mix(in srgb, var(--bg) 45%, var(--ink))',
-                        borderBottom: i === step ? '2px solid var(--accent)' : '2px solid transparent',
-                        marginBottom: -1,
-                        display: 'flex',
-                        gap: 10,
-                        alignItems: 'baseline',
-                        fontFamily: 'var(--body)',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: 'var(--mono)',
-                          fontSize: 11,
-                          color: i <= step ? 'var(--accent)' : 'inherit',
-                        }}
-                      >
-                        {s.n}
-                      </span>
-                      <span style={{ fontSize: 14, fontWeight: 500 }}>{s.label}</span>
-                    </button>
-                  ))}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                  <Field label="Band or artist name" required>
+                    <input
+                      style={inputBase}
+                      value={form.bandName}
+                      onChange={update('bandName')}
+                      placeholder="e.g. Copper Skies"
+                    />
+                  </Field>
+                  <div
+                    className="contact-name-email-grid"
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: 24,
+                    }}
+                  >
+                    <Field label="Your name" required>
+                      <input
+                        style={inputBase}
+                        value={form.contactName}
+                        onChange={update('contactName')}
+                        placeholder="Sam"
+                      />
+                    </Field>
+                    <Field label="Email" required>
+                      <input
+                        style={inputBase}
+                        type="email"
+                        value={form.email}
+                        onChange={update('email')}
+                        placeholder="sam@band.com"
+                      />
+                    </Field>
+                  </div>
+                  <Field
+                    label="Link to your music"
+                    hint="Spotify, Bandcamp, SoundCloud, YouTube — whatever's current"
+                  >
+                    <input
+                      style={inputBase}
+                      value={form.musicLink}
+                      onChange={update('musicLink')}
+                      placeholder="https://open.spotify.com/artist/..."
+                    />
+                  </Field>
+                  <Field
+                    label="Socials / existing website"
+                    hint="Optional. Instagram, existing site, Linktree, anything."
+                  >
+                    <textarea
+                      style={inputBase}
+                      value={form.socials}
+                      onChange={update('socials')}
+                      placeholder={`@yourband on Instagram\nyourband.bandcamp.com`}
+                      rows={3}
+                    />
+                  </Field>
+                  <Field
+                    label="Tell me about your project"
+                    required
+                    hint="The more you tell me, the better. What's working, what's not, what it needs to do for you."
+                  >
+                    <textarea
+                      style={inputBase}
+                      value={form.project}
+                      onChange={update('project')}
+                      rows={8}
+                      placeholder={`We're a 4-piece from Wellington. Currently we don't have a site — just a Linktree. We want bookers and venues to take us more seriously and make it easy to get in touch...`}
+                    />
+                  </Field>
                 </div>
 
-                {/* Step content */}
-                {step === 0 && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                    <Field label="Band or artist name" required>
-                      <input
-                        style={inputBase}
-                        value={form.bandName}
-                        onChange={update('bandName')}
-                        placeholder="e.g. Copper Skies"
-                      />
-                    </Field>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        gap: 24,
-                      }}
-                    >
-                      <Field label="Your name" required>
-                        <input
-                          style={inputBase}
-                          value={form.contactName}
-                          onChange={update('contactName')}
-                          placeholder="Sam"
-                        />
-                      </Field>
-                      <Field label="Email" required>
-                        <input
-                          style={inputBase}
-                          type="email"
-                          value={form.email}
-                          onChange={update('email')}
-                          placeholder="sam@band.com"
-                        />
-                      </Field>
-                    </div>
-                  </div>
-                )}
-
-                {step === 1 && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                    <Field
-                      label="Link to your music"
-                      hint="Spotify, Bandcamp, SoundCloud, YouTube — whatever's current"
-                    >
-                      <input
-                        style={inputBase}
-                        value={form.musicLink}
-                        onChange={update('musicLink')}
-                        placeholder="https://open.spotify.com/artist/..."
-                      />
-                    </Field>
-                    <Field
-                      label="Socials / existing website"
-                      hint="Optional. Instagram, existing site, Linktree, anything."
-                    >
-                      <textarea
-                        style={inputBase}
-                        value={form.socials}
-                        onChange={update('socials')}
-                        placeholder={`@yourband on Instagram\nyourband.bandcamp.com`}
-                        rows={3}
-                      />
-                    </Field>
-                  </div>
-                )}
-
-                {step === 2 && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                    <Field
-                      label="Tell me about your project"
-                      required
-                      hint="The more you tell me, the better. What's working, what's not, what it needs to do for you."
-                    >
-                      <textarea
-                        style={inputBase}
-                        value={form.project}
-                        onChange={update('project')}
-                        rows={10}
-                        placeholder={`We're a 4-piece from Wellington. Currently we don't have a site — just a Linktree. We want bookers and venues to take us more seriously and make it easy to get in touch...`}
-                      />
-                    </Field>
-                  </div>
-                )}
-
-                {/* Controls */}
                 <div
+                  className="contact-form-controls"
                   style={{
                     marginTop: 40,
                     paddingTop: 24,
                     borderTop:
                       '1px solid color-mix(in srgb, var(--bg) 12%, var(--ink))',
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-end',
                     alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: 16,
                   }}
                 >
-                  <div
+                  <button
+                    type="submit"
+                    disabled={!canSubmit || submitting}
                     style={{
-                      fontFamily: 'var(--mono)',
-                      fontSize: 11,
-                      letterSpacing: '0.15em',
-                      color: 'color-mix(in srgb, var(--bg) 45%, var(--ink))',
+                      ...primaryBtnStyle,
+                      opacity: canSubmit && !submitting ? 1 : 0.4,
+                      cursor: canSubmit && !submitting ? 'pointer' : 'not-allowed',
                     }}
                   >
-                    STEP {step + 1} / {steps.length}
-                  </div>
-                  <div style={{ display: 'flex', gap: 10 }}>
-                    {step > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setStep(step - 1)}
-                        style={ghostBtnStyle}
-                      >
-                        Back
-                      </button>
-                    )}
-                    {step < steps.length - 1 ? (
-                      <button
-                        type="button"
-                        onClick={() => canNext() && setStep(step + 1)}
-                        disabled={!canNext()}
-                        style={{
-                          ...primaryBtnStyle,
-                          opacity: canNext() ? 1 : 0.4,
-                          cursor: canNext() ? 'pointer' : 'not-allowed',
-                        }}
-                      >
-                        Continue <Arrow />
-                      </button>
-                    ) : (
-                      <button
-                        type="submit"
-                        disabled={!canNext() || submitting}
-                        style={{
-                          ...primaryBtnStyle,
-                          opacity: canNext() && !submitting ? 1 : 0.4,
-                          cursor: canNext() && !submitting ? 'pointer' : 'not-allowed',
-                        }}
-                      >
-                        {submitting ? 'Sending…' : 'Send brief'} <Arrow />
-                      </button>
-                    )}
-                  </div>
+                    {submitting ? 'Sending…' : 'Send brief'} <Arrow />
+                  </button>
                 </div>
               </form>
             )}
