@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     }
 
     await resend.emails.send({
-      from: 'Backline Sites <onboarding@resend.dev>',
+      from: 'Backline Sites <sam@backlinesites.co.nz>',
       to: ['backlinesites@gmail.com'],
       replyTo: email,
       subject: `New project brief — ${bandName}`,
